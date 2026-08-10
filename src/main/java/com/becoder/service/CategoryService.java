@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.becoder.dto.CategoryDto;
 import com.becoder.dto.CategoryResponse;
+import com.becoder.exception.ResourceNotFoundException;
 
 public interface CategoryService {
 	
@@ -14,7 +15,7 @@ public interface CategoryService {
 
 	public List<CategoryResponse> getActiveCategory();
 
-	public CategoryDto getCategoryById(Integer id);
+	public CategoryDto getCategoryById(Integer id) throws ResourceNotFoundException;
 
 	public Boolean deleteCategory(Integer id);
 	
