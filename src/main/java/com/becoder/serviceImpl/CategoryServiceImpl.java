@@ -1,7 +1,7 @@
 package com.becoder.serviceImpl;
 
 import java.sql.Date;
-
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,15 +39,15 @@ public class CategoryServiceImpl implements CategoryService {
 
 		if (ObjectUtils.isEmpty(category.getId())) {
 			category.setIsDeleted(false);
-			category.setCreatedBy(1);
-			category.setCreatedOn(new Date(System.currentTimeMillis()));
+//			category.setCreatedBy(1);
+			category.setCreatedOn(LocalDateTime.now());
 		} else {
 			updateCategory(category);
 		}
 
 		category.setIsDeleted(false);
 		category.setCreatedBy(1);
-		category.setCreatedOn(new Date(System.currentTimeMillis()));
+		category.setCreatedOn(LocalDateTime.now());
 		Category saveCategory = categoryRepository.save(category);
 		if (ObjectUtils.isEmpty(saveCategory)) {
 			return false;
@@ -62,8 +62,8 @@ public class CategoryServiceImpl implements CategoryService {
 			category.setCreatedBy(existCategory.getCreatedBy());
 			category.setCreatedOn(existCategory.getCreatedOn());
 			category.setIsDeleted(existCategory.getIsDeleted());
-			category.setUpdatedBy(1);
-			category.setUpdatedOn(new Date(System.currentTimeMillis()));
+//			category.setUpdatedBy(1);
+//			category.setUpdatedOn(new Date(System.currentTimeMillis()));
 		}
 	}
 

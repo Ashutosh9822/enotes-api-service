@@ -1,39 +1,50 @@
 package com.becoder.entity;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class BaseModel {
 
-	private Boolean isActive;
-
-	private Boolean isDeleted;
-
+	@CreatedBy
+	@Column(updatable = false)
 	private Integer createdBy;
 
-	private Date createdOn;
+	@CreatedDate
+	@Column(updatable = false)
+	private LocalDateTime createdOn;
 
+	@LastModifiedBy
+	@Column(insertable = false)
 	private Integer updatedBy;
 
-	private Date updatedOn;
+	@LastModifiedDate
+	@Column(insertable = false)
+	private LocalDateTime updatedOn;
 	
-
-	public Boolean getIsActive() {
-		return isActive;
+	
+	public LocalDateTime getCreatedOn() {
+		return createdOn;
 	}
 
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
+	public void setCreatedOn(LocalDateTime createdOn) {
+		this.createdOn = createdOn;
 	}
 
-	public Boolean getIsDeleted() {
-		return isDeleted;
+	public LocalDateTime getUpdatedOn() {
+		return updatedOn;
 	}
 
-	public void setIsDeleted(Boolean isDeleted) {
-		this.isDeleted = isDeleted;
+	public void setUpdatedOn(LocalDateTime updatedOn) {
+		this.updatedOn = updatedOn;
 	}
 
 	public Integer getCreatedBy() {
@@ -44,14 +55,6 @@ public class BaseModel {
 		this.createdBy = createdBy;
 	}
 
-	public Date getCreatedOn() {
-		return createdOn;
-	}
-
-	public void setCreatedOn(Date createdOn) {
-		this.createdOn = createdOn;
-	}
-
 	public Integer getUpdatedBy() {
 		return updatedBy;
 	}
@@ -60,19 +63,13 @@ public class BaseModel {
 		this.updatedBy = updatedBy;
 	}
 
-	public Date getUpdatedOn() {
-		return updatedOn;
-	}
-
-	public void setUpdatedOn(Date updatedOn) {
-		this.updatedOn = updatedOn;
-	}
 
 	@Override
 	public String toString() {
-		return "BaseModel [isActive=" + isActive + ", isDeleted=" + isDeleted + ", createdBy=" + createdBy
-				+ ", createdOn=" + createdOn + ", updatedBy=" + updatedBy + ", updatedOn=" + updatedOn + "]";
+		return "BaseModel [createdBy=" + createdBy + ", createdOn=" + createdOn + ", updatedBy=" + updatedBy
+				+ ", updatedOn=" + updatedOn + "]";
 	}
+
 
 
 }
