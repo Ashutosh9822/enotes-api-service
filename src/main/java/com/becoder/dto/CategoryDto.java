@@ -1,6 +1,7 @@
 package com.becoder.dto;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class CategoryDto {
 
@@ -14,11 +15,11 @@ public class CategoryDto {
 
 	private Integer createdBy;
 
-	private Date createdOn;
+	private LocalDateTime createdOn;
 
 	private Integer updatedBy;
 
-	private Date updatedOn;
+	private LocalDateTime updatedOn;
 
 	public Integer getId() {
 		return id;
@@ -60,11 +61,11 @@ public class CategoryDto {
 		this.createdBy = createdBy;
 	}
 
-	public Date getCreatedOn() {
+	public LocalDateTime getCreatedOn() {
 		return createdOn;
 	}
 
-	public void setCreatedOn(Date createdOn) {
+	public void setCreatedOn(LocalDateTime createdOn) {
 		this.createdOn = createdOn;
 	}
 
@@ -76,11 +77,11 @@ public class CategoryDto {
 		this.updatedBy = updatedBy;
 	}
 
-	public Date getUpdatedOn() {
+	public LocalDateTime getUpdatedOn() {
 		return updatedOn;
 	}
 
-	public void setUpdatedOn(Date updatedOn) {
+	public void setUpdatedOn(LocalDateTime updatedOn) {
 		this.updatedOn = updatedOn;
 	}
 
