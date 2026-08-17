@@ -1,5 +1,7 @@
 package com.becoder.exception;
 
+import java.io.FileNotFoundException;
+
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
@@ -35,6 +37,12 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> HandleValidationException(ValidationException e){
 //		return new ResponseEntity<>(e.getErrors(),HttpStatus.BAD_REQUEST);
 		return CommonUtil.createErrorResponse(e.getErrors(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(FileNotFoundException.class)
+	public ResponseEntity<?> HandleFileNotFoundException(FileNotFoundException e){
+//		return new ResponseEntity<>(e.getErrors(),HttpStatus.BAD_REQUEST);
+		return CommonUtil.createErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND);
 	}
 	
 	@ExceptionHandler(ExistDataException.class)
