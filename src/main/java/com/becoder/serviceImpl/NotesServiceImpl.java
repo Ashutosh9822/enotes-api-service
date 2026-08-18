@@ -14,6 +14,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StreamUtils;
@@ -21,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.becoder.dto.NotesDto;
 import com.becoder.dto.NotesDto.CategoryDto;
+import com.becoder.dto.NotesResponse;
 import com.becoder.entity.FileDetails;
 import com.becoder.entity.Notes;
 import com.becoder.exception.ResourceNotFoundException;
@@ -163,6 +167,24 @@ public class NotesServiceImpl implements NotesService {
 	public FileDetails getFileDetails(Integer id) throws Exception {
 		FileDetails fileDetails = fileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("File is not available"));
 		return fileDetails;
+	}
+
+	@Override
+	public NotesResponse getAllNotesByUser(Integer userId,Integer pageSize, Integer pageNo) {
+		Pageable pageable=PageRequest.of(pageNo, pageSize);
+		Page<Notes> pageNotes = notesRepository.findByCreatedBy(userId,pageable);
+		List<NotesDto> notesDto = pageNotes.get().map(n -> mapper.map(n, NotesDto.class)).toList();
+		
+		NotesResponse notes = new NotesResponse();
+		notes.setNotes(notesDto);
+	    notes.setPageNo(pageNotes.getNumber());
+	    notes.setPageSize(pageNotes.getSize());
+	    notes.setTotalElements((int) pageNotes.getTotalElements());
+	    notes.setTotalPages(pageNotes.getTotalPages());
+	    notes.setIsFirst(pageNotes.isFirst());
+	    notes.setIsLast(pageNotes.isLast());
+		
+		return notes;
 	}
 
 }

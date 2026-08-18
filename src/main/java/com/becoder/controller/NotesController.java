@@ -2,7 +2,6 @@ package com.becoder.controller;
 
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.util.CollectionUtils;
 import com.becoder.dto.NotesDto;
+import com.becoder.dto.NotesResponse;
 import com.becoder.entity.FileDetails;
 import com.becoder.service.NotesService;
 import com.becoder.util.CommonUtil;
@@ -24,41 +24,52 @@ import com.becoder.util.CommonUtil;
 @RestController
 @RequestMapping("/api/v1/notes")
 public class NotesController {
-	
+
 	@Autowired
 	private NotesService notesService;
-	
+
 	@PostMapping("/save-notes")
-	public ResponseEntity<?> saveNotes(@RequestParam String notes,@RequestParam (required = false) MultipartFile file) throws Exception{
-		Boolean saveNotes = notesService.saveNotes(notes,file);
-		if(saveNotes) {
+	public ResponseEntity<?> saveNotes(@RequestParam String notes, @RequestParam(required = false) MultipartFile file)
+			throws Exception {
+		Boolean saveNotes = notesService.saveNotes(notes, file);
+		if (saveNotes) {
 			return CommonUtil.createBuildResponseMessage("Notes saved successfully", HttpStatus.CREATED);
 		}
 		return CommonUtil.createErrorResponseMessage("Notes Not saved", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	@GetMapping("/download/{id}")
-	public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception{
-		
+	public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception {
+
 		FileDetails fileDetails = notesService.getFileDetails(id);
 		byte[] data = notesService.downloadFile(fileDetails);
-		
-		HttpHeaders headers=new HttpHeaders();
+
+		HttpHeaders headers = new HttpHeaders();
 		String contentType = CommonUtil.getContentType(fileDetails.getOriginalFileName());
 		headers.setContentType(MediaType.parseMediaType(contentType));
 		headers.setContentDispositionFormData("attachment", fileDetails.getOriginalFileName());
-		
+
 		return ResponseEntity.ok().headers(headers).body(data);
 	}
-	
+
 	@GetMapping("/notes")
-	public ResponseEntity<?> getAllNotes(){
+	public ResponseEntity<?> getAllNotes() {
 		List<NotesDto> allNotes = notesService.getAllNotes();
-		if(CollectionUtils.isEmpty(allNotes)) {
+		if (CollectionUtils.isEmpty(allNotes)) {
 			return ResponseEntity.noContent().build();
 		}
 		return CommonUtil.createBuildResponse(allNotes, HttpStatus.OK);
 	}
-	
-	
+
+	@GetMapping("/user-notes")
+	public ResponseEntity<?> getAllNotesByUser(@RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
+		Integer userId = 1;
+		NotesResponse allNotes = notesService.getAllNotesByUser(userId,pageSize,pageNo);
+//		if(CollectionUtils.isEmpty(allNotes)) {
+//			return ResponseEntity.noContent().build();
+//		}
+		return CommonUtil.createBuildResponse(allNotes, HttpStatus.OK);
+	}
+
 }
