@@ -1,5 +1,7 @@
 package com.becoder.entity;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Entity;
@@ -27,7 +29,9 @@ public class Notes extends BaseModel {
 	@ManyToOne
 	private FileDetails fileDetails;
 	
+	private Boolean isDeleted;
 	
+	private LocalDateTime deletedOn;
 
 	public FileDetails getFileDetails() {
 		return fileDetails;
@@ -69,10 +73,26 @@ public class Notes extends BaseModel {
 		this.category = category;
 	}
 
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
+	public LocalDateTime getDeletedOn() {
+		return deletedOn;
+	}
+
+	public void setDeletedOn(LocalDateTime deletedOn) {
+		this.deletedOn = deletedOn;
+	}
+
 	@Override
 	public String toString() {
 		return "Notes [id=" + id + ", title=" + title + ", description=" + description + ", category=" + category
-				+ ", fileDetails=" + fileDetails + "]";
+				+ ", fileDetails=" + fileDetails + ", isDeleted=" + isDeleted + ", deletedOn=" + deletedOn + "]";
 	}
 	
 	

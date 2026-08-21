@@ -23,9 +23,29 @@ public class NotesDto {
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime updatedOn;
-	
+
 	private FilesDto fileDetails;
+
+	private Boolean isDeleted;
+
+	private LocalDateTime deletedOn;
 	
+
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
+	public LocalDateTime getDeletedOn() {
+		return deletedOn;
+	}
+
+	public void setDeletedOn(LocalDateTime deletedOn) {
+		this.deletedOn = deletedOn;
+	}
 
 	public FilesDto getFileDetails() {
 		return fileDetails;
@@ -103,15 +123,16 @@ public class NotesDto {
 	public String toString() {
 		return "NotesDto [id=" + id + ", title=" + title + ", description=" + description + ", category=" + category
 				+ ", createdBy=" + createdBy + ", createdOn=" + createdOn + ", updatedBy=" + updatedBy + ", updatedOn="
-				+ updatedOn + "]";
+				+ updatedOn + ", fileDetails=" + fileDetails + ", isDeleted=" + isDeleted + ", deletedOn=" + deletedOn
+				+ "]";
 	}
-	
-	public static class FilesDto{
-		
+
+	public static class FilesDto {
+
 		private Integer id;
-		
+
 		private String originalFileName;
-		
+
 		private String displayFileName;
 
 		public Integer getId() {
@@ -143,7 +164,7 @@ public class NotesDto {
 			return "FilesDto [id=" + id + ", originalFileName=" + originalFileName + ", displayFileName="
 					+ displayFileName + "]";
 		}
-		
+
 	}
 
 	public static class CategoryDto {
