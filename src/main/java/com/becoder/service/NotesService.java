@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.becoder.dto.FavouriteNoteDto;
 import com.becoder.dto.NotesDto;
 import com.becoder.dto.NotesResponse;
+import com.becoder.entity.FavouriteNotes;
 import com.becoder.entity.FileDetails;
 
 public interface NotesService {
@@ -29,5 +31,11 @@ public interface NotesService {
 	public void hardDeleteNotes(Integer id) throws Exception;
 
 	public void emptyRecycleBin(Integer userId);
+	
+	public void favouritrNotes(Integer notesId) throws Exception;
+	
+	public void unfavouriteNotes(Integer notesId) throws Exception;
+	
+	public List<FavouriteNoteDto> getUserFavouritrNotes();
 	
 }
