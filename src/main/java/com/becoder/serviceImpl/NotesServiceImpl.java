@@ -285,4 +285,22 @@ public class NotesServiceImpl implements NotesService {
 		return favouriteNotes.stream().map(fn -> mapper.map(fn, FavouriteNoteDto.class)).toList();
 	}
 
+	@Override
+	public Boolean copyNotes(Integer id) throws Exception {
+		Notes notes = notesRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Notes not found! Invalid ID"));
+		Notes copyNotes = new Notes();
+		copyNotes.setTitle(notes.getTitle());
+		copyNotes.setDescription(notes.getDescription());
+		copyNotes.setCategory(notes.getCategory());
+		copyNotes.setIsDeleted(false);
+		copyNotes.setFileDetails(null);
+
+		Notes saveCopyNotes = notesRepository.save(copyNotes);
+		
+		if(ObjectUtils.isEmpty(saveCopyNotes)) {
+			return false;
+		}
+		return true;
+	}
+	
 }
