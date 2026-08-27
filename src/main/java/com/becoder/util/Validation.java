@@ -14,9 +14,11 @@ import com.becoder.dto.TodoDto;
 import com.becoder.dto.TodoDto.StatusDto;
 import com.becoder.dto.UserDto;
 import com.becoder.enums.TodoStatus;
+import com.becoder.exception.ExistDataException;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.exception.ValidationException;
 import com.becoder.repository.RoleRepository;
+import com.becoder.repository.UserRepository;
 
 import org.springframework.util.StringUtils;
 
@@ -25,6 +27,9 @@ public class Validation {
 
 	@Autowired
 	private RoleRepository roleRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	public void categoryValidation(CategoryDto categoryDto) {
 
@@ -90,6 +95,11 @@ public class Validation {
 
 		if (!StringUtils.hasText(userDto.getEmail()) || !userDto.getEmail().matches(Constants.EMAIL_REGEX)) {
 			throw new IllegalArgumentException("Email is Invalid");
+		}else {
+			Boolean existsEmail = userRepository.existsByEmail(userDto.getEmail());
+			if(existsEmail) {
+				throw new ExistDataException("Email already exist");
+			}
 		}
 
 		if (!StringUtils.hasText(userDto.getMobNo()) || !userDto.getMobNo().matches(Constants.MOBNO_REGEX)) {
