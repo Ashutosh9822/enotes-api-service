@@ -21,6 +21,12 @@ public class GlobalExceptionHandler {
 		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<?> HandleIllegalArgumentException(IllegalArgumentException e){
+//		return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<?> HandleNullPointerEntityException(Exception e){
 //		return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -47,12 +53,12 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(ExistDataException.class)
 	public ResponseEntity<?> HandleExistDataException(ExistDataException e){
-		return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
+		return CommonUtil.createErrorResponse(e.getMessage(),HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<?> HandleHttpMessageNotReadableException(HttpMessageNotReadableException e){
-		return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+		return CommonUtil.createErrorResponse(e.getMessage(),HttpStatus.BAD_REQUEST);
 	}
 	
 }
