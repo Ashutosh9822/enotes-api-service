@@ -1,6 +1,8 @@
 package com.becoder.serviceImpl;
 
+import java.lang.module.ModuleDescriptor.Builder;
 import java.util.List;
+import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.becoder.dto.EmailRequest;
 import com.becoder.dto.UserDto;
+import com.becoder.entity.AccountStatus;
 import com.becoder.entity.Role;
 import com.becoder.entity.User;
 import com.becoder.repository.RoleRepository;
@@ -35,25 +38,36 @@ public class UserServiceImpl implements UserService {
 	private EmailService emailService;
 
 	@Override
-	public Boolean register(UserDto userDto) throws Exception {
+	public Boolean register(UserDto userDto,String url) throws Exception {
 		validation.userValidation(userDto);
 		User user = mapper.map(userDto, User.class);
+		
 		setRole(userDto,user);
+		
+		AccountStatus status = new AccountStatus();
+		status.setIsActive(false);
+		status.setVerificationCode(UUID.randomUUID().toString());
+		user.setStatus(status);
+		
 		User saveUser = userRepository.save(user);
 		if(ObjectUtils.isEmpty(saveUser)) {
 			return false;
 		}
-		emailSend(saveUser);
+		emailSend(saveUser,url);
 		return true;
 	}
 
-	private void emailSend(User saveUser) throws Exception {
-		String message="Hi,<b>"+saveUser.getFirstName()+"</b>"
+	private void emailSend(User saveUser, String url) throws Exception {
+		String message="Hi,<b>[[username]]</b>"
 					+"<br>Your account Register Successfully</br>"
 					+"<br>Click below link to verify your account</br>"
-					+"<a href='#'>Click Here</a></br></br>"
+					+"<a href='[[url]]'>Click Here</a></br></br>"
 					+"Thanks,</br>Enotes"
 				;
+		
+		message=message.replace("[[username]]", saveUser.getFirstName());
+		message=message.replace("[[url]]", url+"/api/v1/home/verify?uid="+saveUser.getId()+"&&code="+saveUser.getStatus().getVerificationCode());
+		
 		EmailRequest emailRequest = new EmailRequest();
 		emailRequest.setTo(saveUser.getEmail());
 		emailRequest.setTitle("Account Creating Confirmation");
