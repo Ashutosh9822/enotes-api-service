@@ -3,11 +3,14 @@ package com.becoder.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.becoder.dto.LoginRequest;
+import com.becoder.dto.LoginResponse;
 import com.becoder.dto.UserDto;
 import com.becoder.service.UserService;
 import com.becoder.util.CommonUtil;
@@ -15,7 +18,7 @@ import com.becoder.util.CommonUtil;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 	
 	@Autowired
@@ -29,6 +32,15 @@ public class AuthController {
 			return CommonUtil.createBuildResponseMessage("Registered Successfully", HttpStatus.CREATED);
 		}
 		return CommonUtil.createErrorResponseMessage("Registered Failed", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
+		LoginResponse loginResponse = userService.login(loginRequest);
+		if(ObjectUtils.isEmpty(loginResponse)) {
+			return CommonUtil.createErrorResponseMessage("invalid crediential", HttpStatus.BAD_REQUEST);
+		}
+		return CommonUtil.createBuildResponse(loginResponse, HttpStatus.OK);
 	}
 	
 }
