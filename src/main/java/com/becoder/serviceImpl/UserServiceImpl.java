@@ -24,6 +24,7 @@ import com.becoder.entity.User;
 import com.becoder.repository.RoleRepository;
 import com.becoder.repository.UserRepository;
 import com.becoder.security.CustomUserDetails;
+import com.becoder.service.JwtService;
 import com.becoder.service.UserService;
 import com.becoder.util.Validation;
 
@@ -50,26 +51,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
-
-//	@Override
-//	public Boolean register(UserDto userDto,String url) throws Exception {
-//		validation.userValidation(userDto);
-//		User user = mapper.map(userDto, User.class);
-//		
-//		setRole(userDto,user);
-//		
-//		AccountStatus status = new AccountStatus();
-//		status.setIsActive(false);
-//		status.setVerificationCode(UUID.randomUUID().toString());
-//		user.setStatus(status);
-//		
-//		User saveUser = userRepository.save(user);
-//		if(ObjectUtils.isEmpty(saveUser)) {
-//			return false;
-//		}
-//		emailSend(saveUser,url);
-//		return true;
-//	}
+	
+	@Autowired
+	private JwtService jwtService;
 
 	@Override
 	public Boolean register(UserDto userDto, String url) throws Exception {
@@ -126,20 +110,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public LoginResponse login(LoginRequest loginRequest) {
-
-		Authentication authenticate = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-
+		
+		Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 		CustomUserDetails customUserDetails = (CustomUserDetails) authenticate.getPrincipal();
-
-		String token = "saffghshgfhtryhdj";
-
+		String token = jwtService.generateToken(customUserDetails.getUser());
 		LoginResponse loginResponse = new LoginResponse();
-
 		loginResponse.setUser(mapper.map(customUserDetails.getUser(), UserDto.class));
-
 		loginResponse.setToken(token);
-
+		
 		return loginResponse;
 	}
 
