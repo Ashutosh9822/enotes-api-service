@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ public class NotesController {
 	private NotesService notesService;
 
 	@PostMapping("/save-notes")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<?> saveNotes(@RequestParam String notes, @RequestParam(required = false) MultipartFile file)
 			throws Exception {
 		Boolean saveNotes = notesService.saveNotes(notes, file);
@@ -42,6 +44,7 @@ public class NotesController {
 	}
 
 	@GetMapping("/download/{id}")
+	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
 	public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception {
 
 		FileDetails fileDetails = notesService.getFileDetails(id);
@@ -56,6 +59,7 @@ public class NotesController {
 	}
 
 	@GetMapping("/notes")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<?> getAllNotes() {
 		List<NotesDto> allNotes = notesService.getAllNotes();
 		if (CollectionUtils.isEmpty(allNotes)) {
@@ -65,6 +69,7 @@ public class NotesController {
 	}
 
 	@GetMapping("/user-notes")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<?> getAllNotesByUser(@RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
 			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
 		Integer userId = 1;
@@ -76,18 +81,21 @@ public class NotesController {
 	}
 	
 	@GetMapping("/delete/{id}")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<?> deleteNotes(@PathVariable Integer id) throws Exception{
 		notesService.softDeleteNotes(id);
 		return CommonUtil.createBuildResponseMessage("Delete Successfully", HttpStatus.OK);
 	}
 	
 	@GetMapping("/restore/{id}")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<?> restoreNotes(@PathVariable Integer id) throws Exception{
 		notesService.restoreNotes(id);
 		return CommonUtil.createBuildResponseMessage("Not Restore Successfully", HttpStatus.OK);
 	}
 
 	@GetMapping("/recycle-bin")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<?> getUserRecycleBinNotes() throws Exception{
 		Integer userId = 1;
 		List<NotesDto> notes = notesService.getUserRecycleBinNotes(userId);
@@ -98,12 +106,14 @@ public class NotesController {
 	}
 	
 	@DeleteMapping("/delete/{id}")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<?> hardDeleteNotes(@PathVariable Integer id) throws Exception{
 		notesService.hardDeleteNotes(id);
 		return CommonUtil.createBuildResponseMessage("Delete Successfully", HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/delete")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<?> emptyRecycleBin() throws Exception{
 		Integer userId=1;
 		notesService.emptyRecycleBin(userId);
@@ -111,18 +121,21 @@ public class NotesController {
 	}
 	
 	@GetMapping("/fav/{noteId}")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<?> favouriteNote(@PathVariable Integer noteId) throws Exception{
 		notesService.favouritrNotes(noteId);
 		return CommonUtil.createBuildResponseMessage("Notes Added Favourite", HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping("/un-fav/{favNotId}")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<?> unFavouriteNote(@PathVariable Integer favNotId) throws Exception{
 		notesService.unfavouriteNotes(favNotId);
 		return CommonUtil.createBuildResponseMessage("Remove Favourite", HttpStatus.OK);
 	}
 	
 	@GetMapping("/fav-note")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<?> getUserfavouriteNote() throws Exception{
 		List<FavouriteNoteDto> userFavouritrNotes = notesService.getUserFavouritrNotes();
 		if(CollectionUtils.isEmpty(userFavouritrNotes)) {
@@ -132,6 +145,7 @@ public class NotesController {
 	}
 	
 	@GetMapping("/copy/{id}")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<?> copyNotes(@PathVariable Integer id) throws Exception{
 		Boolean copyNotes = notesService.copyNotes(id);
 		if(copyNotes) {

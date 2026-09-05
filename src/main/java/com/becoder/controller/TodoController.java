@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ public class TodoController {
 	private TodoService todoService;
 	
 	@PostMapping("/savetodo")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<?> saneTodo(@RequestBody TodoDto todo) throws Exception{
 		Boolean saveTodo = todoService.SaveTodo(todo);
 		if(saveTodo) {
@@ -35,12 +37,14 @@ public class TodoController {
 	}
 	
 	@GetMapping("/Todo/{id}")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<?> getTodoById(@PathVariable Integer id) throws Exception{
 		TodoDto todo = todoService.getTodoById(id);
 		return CommonUtil.createBuildResponse(todo, HttpStatus.OK);
 	}
 	
 	@GetMapping("/list")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<?> getAllTodoByUser(){
 		List<TodoDto> todoList = todoService.getTodoByUser();
 		if(CollectionUtils.isEmpty(todoList)) {
@@ -49,7 +53,5 @@ public class TodoController {
 			return CommonUtil.createBuildResponse(todoList, HttpStatus.OK);
 		}
 	}
-	
-	
 	
 }

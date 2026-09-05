@@ -13,9 +13,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.becoder.entity.User;
+import com.becoder.exception.JwtTokenExpiredException;
 import com.becoder.service.JwtService;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -71,9 +74,19 @@ public class JwtServiceImpl implements JwtService {
 		return role;
 	}
 	
-	private Claims extractAllClaims(String token) {
-		Claims claims=Jwts.parser().verifyWith(decryptKey(secretKey)).build().parseSignedClaims(token).getPayload();
-		return claims;
+	private Claims extractAllClaims(String token) {		
+		try {
+			return Jwts.parser().verifyWith(decryptKey(secretKey)).build().parseSignedClaims(token).getPayload();
+		}
+		catch (ExpiredJwtException e) {
+			throw new JwtTokenExpiredException("Token is Expired");
+		}
+		catch (JwtException e) {
+			throw new JwtTokenExpiredException("Invalid JWT Token");
+		}
+		catch (Exception e) {
+			throw e;
+		}
 	}
 
 	private SecretKey decryptKey(String secretKey2) {

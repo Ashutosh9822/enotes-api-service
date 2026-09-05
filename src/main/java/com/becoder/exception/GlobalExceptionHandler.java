@@ -1,6 +1,7 @@
 package com.becoder.exception;
 
 import java.io.FileNotFoundException;
+import java.nio.file.AccessDeniedException;
 
 import org.springframework.http.HttpStatus;
 
@@ -20,6 +21,12 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> HandletException(Exception e){
 //		return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<?> HandleAccessDeniedException(AccessDeniedException e){
+//		return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.FORBIDDEN);
 	}
 	
 	@ExceptionHandler(SuccessException.class)
