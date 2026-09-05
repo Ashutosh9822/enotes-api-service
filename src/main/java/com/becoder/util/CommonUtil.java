@@ -3,8 +3,11 @@ package com.becoder.util;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.becoder.entity.User;
 import com.becoder.handler.GenericResponse;
+import com.becoder.security.CustomUserDetails;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -69,4 +72,13 @@ public class CommonUtil {
 		return apiUrl;
 	}
 
+	public static User getLoggedInUser() {
+		try {
+			CustomUserDetails logUser = (CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			return logUser.getUser();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
 }

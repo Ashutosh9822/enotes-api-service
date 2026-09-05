@@ -5,13 +5,15 @@ import java.util.Optional;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 
+import com.becoder.entity.User;
+import com.becoder.util.CommonUtil;
+
 @Component
 public class AuditAwareConfig implements AuditorAware<Integer> {
 
 	@Override
 	public Optional<Integer> getCurrentAuditor() {
-		return Optional.of(1);
+		User loggedInUser = CommonUtil.getLoggedInUser();		
+		return Optional.of(loggedInUser.getId());
 	}
-	
-	
 }

@@ -2,15 +2,15 @@ package com.becoder.dto;
 
 public class LoginResponse {
 
-	private UserDto user;
+	private UserRequest user;
 	
 	private String token;
 
-	public UserDto getUser() {
+	public UserRequest getUser() {
 		return user;
 	}
 
-	public void setUser(UserDto user) {
+	public void setUser(UserRequest user) {
 		this.user = user;
 	}
 

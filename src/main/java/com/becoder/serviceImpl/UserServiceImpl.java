@@ -17,7 +17,7 @@ import org.springframework.util.ObjectUtils;
 import com.becoder.dto.EmailRequest;
 import com.becoder.dto.LoginRequest;
 import com.becoder.dto.LoginResponse;
-import com.becoder.dto.UserDto;
+import com.becoder.dto.UserRequest;
 import com.becoder.entity.AccountStatus;
 import com.becoder.entity.Role;
 import com.becoder.entity.User;
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 	private JwtService jwtService;
 
 	@Override
-	public Boolean register(UserDto userDto, String url) throws Exception {
+	public Boolean register(UserRequest userDto, String url) throws Exception {
 
 		validation.userValidation(userDto);
 
@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
 		emailService.sendEmail(emailRequest);
 	}
 
-	private void setRole(UserDto userDto, User user) {
+	private void setRole(UserRequest userDto, User user) {
 		List<Integer> reqRoleId = userDto.getRoles().stream().map(r -> r.getId()).toList();
 		List<Role> roles = roleRepository.findAllById(reqRoleId);
 		user.setRoles(roles);
@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
 		CustomUserDetails customUserDetails = (CustomUserDetails) authenticate.getPrincipal();
 		String token = jwtService.generateToken(customUserDetails.getUser());
 		LoginResponse loginResponse = new LoginResponse();
-		loginResponse.setUser(mapper.map(customUserDetails.getUser(), UserDto.class));
+		loginResponse.setUser(mapper.map(customUserDetails.getUser(), UserRequest.class));
 		loginResponse.setToken(token);
 		
 		return loginResponse;

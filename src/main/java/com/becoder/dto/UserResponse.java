@@ -2,7 +2,9 @@ package com.becoder.dto;
 
 import java.util.List;
 
-public class UserDto {
+import com.becoder.dto.TodoDto.StatusDto;
+
+public class UserResponse {
 
 	private Integer id;
 
@@ -13,17 +15,18 @@ public class UserDto {
 	private String email;
 
 	private String mobNo;
-	
-	private String password;
+
+	private StatusDto status;
 	
 	private List<RoleDto> roles;
-
-	public String getPassword() {
-		return password;
+	
+	
+	public StatusDto getStatus() {
+		return status;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setStatus(StatusDto status) {
+		this.status = status;
 	}
 
 	public Integer getId() {
@@ -73,16 +76,38 @@ public class UserDto {
 	public void setRoles(List<RoleDto> roles) {
 		this.roles = roles;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "UserDto [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", mobNo=" + mobNo + ", password=" + password + ", roles=" + roles + "]";
+				+ ", mobNo=" + mobNo  + ", roles=" + roles + "]";
 	}
 
-	public static class RoleDto{
+	public static class RoleDto {
 		private Integer id;
 		private String name;
+
+		public Integer getId() {
+			return id;
+		}
+
+		public void setId(Integer id) {
+			this.id = id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+	}
+	
+	public static class StatusDto {
+		private Integer id;
+		private Boolean isActive;
 		
 		public Integer getId() {
 			return id;
@@ -90,11 +115,11 @@ public class UserDto {
 		public void setId(Integer id) {
 			this.id = id;
 		}
-		public String getName() {
-			return name;
+		public Boolean getIsActive() {
+			return isActive;
 		}
-		public void setName(String name) {
-			this.name = name;
+		public void setIsActive(Boolean isActive) {
+			this.isActive = isActive;
 		}
 		
 	}

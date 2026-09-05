@@ -41,6 +41,7 @@ import com.becoder.repository.FavouriteNotesRepository;
 import com.becoder.repository.FileRepository;
 import com.becoder.repository.NotesRepository;
 import com.becoder.service.NotesService;
+import com.becoder.util.CommonUtil;
 
 import tools.jackson.databind.ObjectMapper;
 
@@ -201,7 +202,8 @@ public class NotesServiceImpl implements NotesService {
 	}
 
 	@Override
-	public NotesResponse getAllNotesByUser(Integer userId, Integer pageSize, Integer pageNo) {
+	public NotesResponse getAllNotesByUser(Integer pageSize, Integer pageNo) {
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		Page<Notes> pageNotes = notesRepository.findByCreatedByAndIsDeletedFalse(userId, pageable);
 		List<NotesDto> notesDto = pageNotes.get().map(n -> mapper.map(n, NotesDto.class)).toList();
@@ -237,7 +239,8 @@ public class NotesServiceImpl implements NotesService {
 	}
 
 	@Override
-	public List<NotesDto> getUserRecycleBinNotes(Integer userId) {
+	public List<NotesDto> getUserRecycleBinNotes() {
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 		List<Notes> recycleNotes = notesRepository.findByCreatedByAndIsDeletedTrue(userId);
 		List<NotesDto> notesDtoList = recycleNotes.stream().map(note -> mapper.map(note, NotesDto.class)).toList();
 		return notesDtoList;
@@ -254,7 +257,8 @@ public class NotesServiceImpl implements NotesService {
 	}
 
 	@Override
-	public void emptyRecycleBin(Integer userId) {
+	public void emptyRecycleBin() {
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 		List<Notes> recycleNotes = notesRepository.findByCreatedByAndIsDeletedTrue(userId);
 		if (!CollectionUtils.isEmpty(recycleNotes)) {
 			notesRepository.deleteAll(recycleNotes);
