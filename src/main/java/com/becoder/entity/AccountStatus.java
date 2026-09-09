@@ -15,6 +15,16 @@ public class AccountStatus {
 	private Boolean isActive;
 	
 	private String verificationCode;
+	
+	private String passwordResetToken;
+
+	public String getPasswordResetToken() {
+		return passwordResetToken;
+	}
+
+	public void setPasswordResetToken(String passwordResetToken) {
+		this.passwordResetToken = passwordResetToken;
+	}
 
 	public Integer getId() {
 		return id;
