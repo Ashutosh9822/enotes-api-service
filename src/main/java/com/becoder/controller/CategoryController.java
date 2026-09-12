@@ -46,7 +46,7 @@ public class CategoryController {
 	
 	@GetMapping("/categories")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public ResponseEntity<?> getAllCategory(@RequestBody Category category){
+	public ResponseEntity<?> getAllCategory(){
 		
 		List<CategoryDto> allCategory = categoryService.getAllCategory();
 		if(CollectionUtils.isEmpty(allCategory)) {
@@ -59,7 +59,7 @@ public class CategoryController {
 	
 	@GetMapping("/active-category")
 	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-	public ResponseEntity<?> getActiveCategory(@RequestBody Category category){
+	public ResponseEntity<?> getActiveCategory(){
 		
 		List<CategoryResponse> allCategory = categoryService.getActiveCategory();
 		if(CollectionUtils.isEmpty(allCategory)) {

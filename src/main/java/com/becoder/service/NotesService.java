@@ -2,12 +2,12 @@ package com.becoder.service;
 
 import java.util.List;
 
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.becoder.dto.FavouriteNoteDto;
 import com.becoder.dto.NotesDto;
 import com.becoder.dto.NotesResponse;
-import com.becoder.entity.FavouriteNotes;
 import com.becoder.entity.FileDetails;
 
 public interface NotesService {
@@ -21,6 +21,8 @@ public interface NotesService {
 	public FileDetails getFileDetails(Integer id) throws Exception;
 
 	public NotesResponse getAllNotesByUser(Integer pageSize, Integer pageNo);
+	
+	public NotesResponse getNotesByUserSearch(Integer pageSize, Integer pageNo,String keyword);
 
 	public void softDeleteNotes(Integer id) throws Exception;
 
