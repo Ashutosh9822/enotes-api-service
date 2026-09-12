@@ -1,0 +1,57 @@
+package com.becoder.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.becoder.dto.TodoDto;
+import com.becoder.service.TodoService;
+import com.becoder.util.CommonUtil;
+
+@RestController
+@RequestMapping("/api/v1/todo")
+public class TodoController {
+	
+	@Autowired
+	private TodoService todoService;
+	
+	@PostMapping("/savetodo")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<?> saneTodo(@RequestBody TodoDto todo) throws Exception{
+		Boolean saveTodo = todoService.SaveTodo(todo);
+		if(saveTodo) {
+			return CommonUtil.createBuildResponseMessage("Todo saved successfully", HttpStatus.CREATED);
+		}else {
+			return CommonUtil.createErrorResponseMessage("Todo not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping("/Todo/{id}")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<?> getTodoById(@PathVariable Integer id) throws Exception{
+		TodoDto todo = todoService.getTodoById(id);
+		return CommonUtil.createBuildResponse(todo, HttpStatus.OK);
+	}
+	
+	@GetMapping("/list")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<?> getAllTodoByUser(){
+		List<TodoDto> todoList = todoService.getTodoByUser();
+		if(CollectionUtils.isEmpty(todoList)) {
+			return ResponseEntity.noContent().build();
+		}else {
+			return CommonUtil.createBuildResponse(todoList, HttpStatus.OK);
+		}
+	}
+	
+}
