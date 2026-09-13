@@ -1,0 +1,182 @@
+spring:
+  application:
+    name: enotes-api-service
+
+  profiles:
+    active: uat
+
+---
+
+# =========================
+# DEV CONFIGURATION
+# =========================
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/enotes_dev?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: samsung@121
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        ddl-auto: none
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  mail:
+    host: smtp.gmail.com
+    username: ashutoshbeura636@gmail.com
+    password: zacxzlzsacxlpveb
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+file:
+  upload:
+    path: notes/
+
+---
+
+# =========================
+# TEST CONFIGURATION
+# =========================
+
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/enotes_test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: samsung@121
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        ddl-auto: none
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  mail:
+    host: smtp.gmail.com
+    username: ashutoshbeura636@gmail.com
+    password: zacxzlzsacxlpveb
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+file:
+  upload:
+    path: notes/
+
+---
+
+# =========================
+# UAT CONFIGURATION
+# =========================
+
+spring:
+  config:
+    activate:
+      on-profile: uat
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/enotes_uat?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: samsung@121
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        ddl-auto: none
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  mail:
+    host: smtp.gmail.com
+    username: ashutoshbeura636@gmail.com
+    password: zacxzlzsacxlpveb
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+file:
+  upload:
+    path: notes/
+
+---
+
+# =========================
+# PROD CONFIGURATION
+# =========================
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/enotes_prod?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: samsung@121
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        ddl-auto: none
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  mail:
+    host: smtp.gmail.com
+    username: ashutoshbeura636@gmail.com
+    password: zacxzlzsacxlpveb
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+file:
+  upload:
+    path: notes/
