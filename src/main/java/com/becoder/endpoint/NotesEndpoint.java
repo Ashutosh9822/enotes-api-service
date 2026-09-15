@@ -1,0 +1,75 @@
+package com.becoder.endpoint;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+@RequestMapping("/api/v1/notes")
+public interface NotesEndpoint {
+	
+	@PostMapping("/save-notes")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<?> saveNotes(@RequestParam String notes, @RequestParam(required = false) MultipartFile file) throws Exception ;
+	
+	@GetMapping("/download/{id}")
+	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+	public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception;
+	
+	@GetMapping("/notes")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ResponseEntity<?> getAllNotes() ;
+	
+	@GetMapping("/user-notes")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<?> getAllNotesByUser(@RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize);
+	
+	@GetMapping("/search-notes")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<?> searchNotes(@RequestParam(name = "key",defaultValue = "") String key,
+			@RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize);
+	
+	@GetMapping("/delete/{id}")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<?> deleteNotes(@PathVariable Integer id) throws Exception;
+	
+	@GetMapping("/restore/{id}")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<?> restoreNotes(@PathVariable Integer id) throws Exception;
+	
+	@GetMapping("/recycle-bin")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<?> getUserRecycleBinNotes() throws Exception;
+	
+	@DeleteMapping("/delete/{id}")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<?> hardDeleteNotes(@PathVariable Integer id) throws Exception;
+	
+	@DeleteMapping("/delete")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<?> emptyUserRecycleBin() throws Exception;
+	
+	@GetMapping("/fav/{noteId}")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<?> favouriteNote(@PathVariable Integer noteId) throws Exception;
+	
+	@DeleteMapping("/un-fav/{favNotId}")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<?> unFavouriteNote(@PathVariable Integer favNotId) throws Exception;
+	
+	@GetMapping("/fav-note")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<?> getUserfavouriteNote() throws Exception;
+	
+	@GetMapping("/copy/{id}")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<?> copyNotes(@PathVariable Integer id) throws Exception;
+	
+}

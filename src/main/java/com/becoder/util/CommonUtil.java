@@ -10,7 +10,9 @@ import com.becoder.handler.GenericResponse;
 import com.becoder.security.CustomUserDetails;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class CommonUtil {
 
 	public static ResponseEntity<?> createBuildResponse(Object data, HttpStatus status) {

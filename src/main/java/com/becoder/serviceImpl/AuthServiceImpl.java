@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.becoder.controller.AuthController;
 import com.becoder.dto.EmailRequest;
 import com.becoder.dto.LoginRequest;
 import com.becoder.dto.LoginResponse;
@@ -28,8 +31,13 @@ import com.becoder.service.JwtService;
 import com.becoder.service.AuthService;
 import com.becoder.util.Validation;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
+	
+	Logger log=LoggerFactory.getLogger(AuthController.class);
 
 	@Autowired
 	private UserRepository userRepository;
@@ -57,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public Boolean register(UserRequest userDto, String url) throws Exception {
-
+		log.info("AuthServiceImpl : register() : Execution Start");
 		validation.userValidation(userDto);
 
 		User user = mapper.map(userDto, User.class);
@@ -76,11 +84,13 @@ public class AuthServiceImpl implements AuthService {
 		User saveUser = userRepository.save(user);
 
 		if (ObjectUtils.isEmpty(saveUser)) {
+			log.info("Error : {}","user not saved");
 			return false;
 		}
-
+		log.info("Message : {}","User Registered successfully");
 		emailSendForRegister(saveUser, url);
-
+		log.info("Message : {}","email send success");
+		log.info("AuthServiceImpl : register() : Execution End");
 		return true;
 	}
 
