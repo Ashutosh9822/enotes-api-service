@@ -44,6 +44,27 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//
+//        http
+//            .csrf(csrf -> csrf.disable())
+//            .authorizeHttpRequests(req -> req
+//                .requestMatchers(
+//                    "/api/v1/home/**",
+//                    "/api/v1/auth/register",
+//                    "/api/v1/auth/login"
+//                ).permitAll()
+//                .anyRequest().authenticated()
+//            )
+//            .httpBasic(Customizer.withDefaults())
+//            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+//            ;
+//
+//        return http.build();
+//    }
+    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -53,7 +74,11 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/api/v1/home/**",
                     "/api/v1/auth/register",
-                    "/api/v1/auth/login"
+                    "/api/v1/auth/login",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                    "/enotes-doc/**",
+                    "/enotes-api-doc/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

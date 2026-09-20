@@ -23,10 +23,11 @@ spring:
     password: samsung@121
 
   jpa:
+    hibernate:
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
-        ddl-auto: none
 
   servlet:
     multipart:
@@ -44,6 +45,14 @@ spring:
           auth: true
           starttls:
             enable: true
+
+springdoc:
+  swagger-ui:
+    operationsSorter: method
+    tagsSorter: alpha
+    path: /enotes-doc
+  api-docs:
+    path: /enotes-api-doc
 
 file:
   upload:
@@ -67,10 +76,11 @@ spring:
     password: samsung@121
 
   jpa:
+    hibernate:
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
-        ddl-auto: none
 
   servlet:
     multipart:
@@ -88,7 +98,15 @@ spring:
           auth: true
           starttls:
             enable: true
-
+server:
+  port: 8081
+springdoc:
+  swagger-ui:
+    operationsSorter: method
+    tagsSorter: alpha
+    path: /enotes-doc
+  api-docs:
+    path: /enotes-api-doc										
 file:
   upload:
     path: notes/
@@ -111,10 +129,11 @@ spring:
     password: samsung@121
 
   jpa:
+    hibernate:
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
-        ddl-auto: none
 
   servlet:
     multipart:
@@ -131,7 +150,14 @@ spring:
         smtp:
           auth: true
           starttls:
-            enable: true
+            enable: true					
+springdoc:
+  swagger-ui:
+    operationsSorter: method
+    tagsSorter: alpha
+    path: /enotes-doc
+  api-docs:
+    path: /enotes-api-doc
 
 file:
   upload:
@@ -155,10 +181,11 @@ spring:
     password: samsung@121
 
   jpa:
+    hibernate:
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
-        ddl-auto: none
 
   servlet:
     multipart:
@@ -176,7 +203,15 @@ spring:
           auth: true
           starttls:
             enable: true
-
+server:
+  port: 8082
+springdoc:
+  swagger-ui:
+    operationsSorter: method
+    tagsSorter: alpha
+    path: /enotes-doc
+  api-docs:
+    path: /enotes-api-doc					
 file:
   upload:
     path: notes/

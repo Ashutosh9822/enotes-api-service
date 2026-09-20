@@ -15,25 +15,34 @@ import static com.becoder.util.Constants.ROLE_ADMIN_USER;
 import com.becoder.dto.CategoryDto;
 import com.becoder.exception.ResourceNotFoundException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Category",description = "All the Category Operation APIs")
 @RequestMapping("/api/v1/category")
 public interface CategoryEndpoint {
 	
+	@Operation(summary = "Save Category Endpoint",description = "Admin save category")
 	@PostMapping("/save-category")
 	@PreAuthorize(ROLE_ADMIN)
 	public ResponseEntity<?> saveCategory(@RequestBody CategoryDto categoryDto);
 	
+	@Operation(summary = "Get All Category Endpoint",description = "Admin Get all category")
 	@GetMapping("/categories")
 	@PreAuthorize(ROLE_ADMIN)
 	public ResponseEntity<?> getAllCategory();
 	
+	@Operation(summary = "Get Active Category Endpoint",description = "Admin,User Get Active category")
 	@GetMapping("/active-category")
 	@PreAuthorize(ROLE_ADMIN_USER)
 	public ResponseEntity<?> getActiveCategory();
 	
+	@Operation(summary = "Get Category By ID Endpoint",description = "Admin Get category details")
 	@GetMapping("/{id}")
 	@PreAuthorize(ROLE_ADMIN)
 	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Integer id) throws ResourceNotFoundException;
 	
+	@Operation(summary = "Delete Category By ID Endpoint",description = "Admin Delete category")
 	@DeleteMapping("/{id}")
 	@PreAuthorize(ROLE_ADMIN)
 	public ResponseEntity<?> deleteCategoryById(@PathVariable Integer id);
