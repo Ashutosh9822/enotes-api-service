@@ -78,7 +78,8 @@ public class SecurityConfig {
                     "/swagger-ui/**",
                     "/v3/api-docs/**",
                     "/enotes-doc/**",
-                    "/enotes-api-doc/**"
+                    "/enotes-api-doc/**",
+                    "/actuator/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
