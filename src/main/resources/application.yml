@@ -58,7 +58,10 @@ management:
     web:
       exposure:
         include: '*'
-
+#  exclude: beans,logger - used to exclude or discard some selected actuators
+#  endpoint:
+#    shutdown:
+#      enabled: true  - used to shutdown with actuatoor with POST method
 
 file:
   upload:
