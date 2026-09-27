@@ -79,7 +79,8 @@ public class SecurityConfig {
                     "/v3/api-docs/**",
                     "/enotes-doc/**",
                     "/enotes-api-doc/**",
-                    "/actuator/**"
+                    "/actuator/**",
+                    "/api/v1/cache/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

@@ -2,6 +2,7 @@ package com.becoder.controller;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,7 +66,7 @@ public class CategoryController implements CategoryEndpoint {
 	}
 	
 	@Override
-	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Integer id) throws ResourceNotFoundException{
+	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Integer id) throws Exception{
 		CategoryDto categoryDto=categoryService.getCategoryById(id);
 		if(ObjectUtils.isEmpty(categoryDto)) {
 			return CommonUtil.createErrorResponseMessage("Internal Server Error", HttpStatus.NOT_FOUND);

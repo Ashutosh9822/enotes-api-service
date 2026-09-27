@@ -15,7 +15,7 @@ public interface CategoryService {
 
 	public List<CategoryResponse> getActiveCategory();
 
-	public CategoryDto getCategoryById(Integer id) throws ResourceNotFoundException;
+	public CategoryDto getCategoryById(Integer id) throws Exception;
 
 	public Boolean deleteCategory(Integer id);
 	

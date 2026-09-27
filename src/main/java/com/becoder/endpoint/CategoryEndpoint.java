@@ -40,7 +40,7 @@ public interface CategoryEndpoint {
 	@Operation(summary = "Get Category By ID Endpoint",description = "Admin Get category details")
 	@GetMapping("/{id}")
 	@PreAuthorize(ROLE_ADMIN)
-	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Integer id) throws ResourceNotFoundException;
+	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Integer id) throws Exception;
 	
 	@Operation(summary = "Delete Category By ID Endpoint",description = "Admin Delete category")
 	@DeleteMapping("/{id}")
