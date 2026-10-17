@@ -2,7 +2,6 @@ package com.becoder.serviceImpl;
 
 import java.io.File;
 
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +11,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
@@ -30,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.becoder.dto.FavouriteNoteDto;
 import com.becoder.dto.NotesDto;
 import com.becoder.dto.NotesDto.CategoryDto;
-import com.becoder.dto.NotesDto.FilesDto;
 import com.becoder.dto.NotesResponse;
 import com.becoder.entity.FavouriteNotes;
 import com.becoder.entity.FileDetails;
@@ -77,7 +74,8 @@ public class NotesServiceImpl implements NotesService {
 		checkCategoryExist(notesDto.getCategory());
 
 		if (!ObjectUtils.isEmpty(notesDto.getId())) {
-			updateNotes(notesDto, file);
+//			updateNotes(notesDto, file);
+			updateNotes(null, notes, file);
 		}
 
 		Notes notesMap = mapper.map(notesDto, Notes.class);
@@ -98,14 +96,53 @@ public class NotesServiceImpl implements NotesService {
 		return true;
 	}
 
-	private void updateNotes(NotesDto notesDto, MultipartFile file) throws Exception {
-		Notes existNotes = notesRepository.findById(notesDto.getId())
-				.orElseThrow(() -> new ResourceNotFoundException("Invalid Notes ID"));
+//	private void updateNotes(NotesDto notesDto, MultipartFile file) throws Exception {
+//		Notes existNotes = notesRepository.findById(notesDto.getId())
+//				.orElseThrow(() -> new ResourceNotFoundException("Invalid Notes ID"));
+//
+//		if (ObjectUtils.isEmpty(file)) {
+//			notesDto.setFileDetails(mapper.map(existNotes.getFileDetails(), FilesDto.class));
+//		}
+//
+//	}
 
-		if (ObjectUtils.isEmpty(file)) {
-			notesDto.setFileDetails(mapper.map(existNotes.getFileDetails(), FilesDto.class));
+	@Override
+	public Boolean updateNotes(Integer id, String notes, MultipartFile file) throws Exception {
+		ObjectMapper ob = new ObjectMapper();
+
+		NotesDto notesDto = ob.readValue(notes, NotesDto.class);
+
+		// Get logged-in user
+		Integer userId = CommonUtil.getLoggedInUser().getId();
+
+		// Find note belonging to logged-in user
+		Notes existingNote = notesRepository.findByIdAndCreatedBy(id, userId).orElseThrow(
+				() -> new ResourceNotFoundException("Notes not found or you are not authorized to update this note"));
+
+		// Check category
+		checkCategoryExist(notesDto.getCategory());
+
+		// Update title
+		existingNote.setTitle(notesDto.getTitle());
+
+		// Update description
+		existingNote.setDescription(notesDto.getDescription());
+
+		// Update category
+		existingNote.setCategory(categoryRepository.findById(notesDto.getCategory().getId())
+				.orElseThrow(() -> new ResourceNotFoundException("Invalid Category ID")));
+		// If new file is uploaded
+		if (!ObjectUtils.isEmpty(file) && !file.isEmpty()) {
+
+			FileDetails fileDetails = saveFileDetails(file);
+
+			existingNote.setFileDetails(fileDetails);
 		}
 
+		// Save updated note
+		Notes updatedNote = notesRepository.save(existingNote);
+
+		return !ObjectUtils.isEmpty(updatedNote);
 	}
 
 	private FileDetails saveFileDetails(MultipartFile file) throws IOException {
@@ -219,12 +256,12 @@ public class NotesServiceImpl implements NotesService {
 
 		return notes;
 	}
-	
+
 	@Override
-	public NotesResponse getNotesByUserSearch(Integer pageSize, Integer pageNo,String keyword) {
+	public NotesResponse getNotesByUserSearch(Integer pageSize, Integer pageNo, String keyword) {
 		Integer userId = CommonUtil.getLoggedInUser().getId();
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		Page<Notes> pageNotes = notesRepository.searchNotes(keyword,userId, pageable);
+		Page<Notes> pageNotes = notesRepository.searchNotes(keyword, userId, pageable);
 		List<NotesDto> notesDto = pageNotes.get().map(n -> mapper.map(n, NotesDto.class)).toList();
 
 		NotesResponse notes = new NotesResponse();
@@ -286,46 +323,70 @@ public class NotesServiceImpl implements NotesService {
 
 	@Override
 	public void favouritrNotes(Integer notesId) throws Exception {
-		Integer userId = 1;
-		Notes notes = notesRepository.findById(notesId).orElseThrow(() -> new ResourceNotFoundException("Notes not found! Invalid ID"));
+
+		Integer userId = CommonUtil.getLoggedInUser().getId();
+
+		Notes notes = notesRepository.findByIdAndCreatedBy(notesId, userId).orElseThrow(
+				() -> new ResourceNotFoundException("Notes not found or you do not have permission to favorite it"));
+
+		if (Boolean.TRUE.equals(notes.getIsDeleted())) {
+			throw new ResourceNotFoundException("Deleted notes cannot be added to favorites");
+		}
+		boolean alreadyFavourite = favouriteNotesRepository.existsByUserIdAndNote_Id(userId, notesId);
+
+		if (alreadyFavourite) {
+			throw new Exception("Note is already in favorites");
+		}
 		FavouriteNotes favouriteNotes = new FavouriteNotes();
 		favouriteNotes.setNote(notes);
 		favouriteNotes.setUserId(userId);
+
 		favouriteNotesRepository.save(favouriteNotes);
 	}
 
 	@Override
 	public void unfavouriteNotes(Integer favouriteNotesId) throws Exception {
-		FavouriteNotes favNotes = favouriteNotesRepository.findById(favouriteNotesId).orElseThrow(() -> new ResourceNotFoundException("Favourite notes not found! Invalid ID"));
-		favouriteNotesRepository.delete(favNotes);
+		Integer userId = CommonUtil.getLoggedInUser().getId();
+		FavouriteNotes favouriteNotes = favouriteNotesRepository.findByIdAndUserId(favouriteNotesId, userId)
+				.orElseThrow(() -> new ResourceNotFoundException(
+						"Favorite not found or you do not have permission to remove it"));
+		favouriteNotesRepository.delete(favouriteNotes);
 	}
 
 	@Override
 	public List<FavouriteNoteDto> getUserFavouritrNotes() {
 
-		int userId=1;
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 		List<FavouriteNotes> favouriteNotes = favouriteNotesRepository.findByUserId(userId);
 		return favouriteNotes.stream().map(fn -> mapper.map(fn, FavouriteNoteDto.class)).toList();
 	}
 
 	@Override
 	public Boolean copyNotes(Integer id) throws Exception {
-		Notes notes = notesRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Notes not found! Invalid ID"));
-		Notes copyNotes = new Notes();
-		copyNotes.setTitle(notes.getTitle());
-		copyNotes.setDescription(notes.getDescription());
-		copyNotes.setCategory(notes.getCategory());
-		copyNotes.setIsDeleted(false);
-		copyNotes.setFileDetails(null);
 
-		Notes saveCopyNotes = notesRepository.save(copyNotes);
-		
-		if(ObjectUtils.isEmpty(saveCopyNotes)) {
-			return false;
-		}
-		return true;
+	    Integer userId = CommonUtil.getLoggedInUser().getId();
+
+	    Notes originalNote = notesRepository
+	    		.findByIdAndCreatedBy(id, userId)
+	    		.orElseThrow(() -> new ResourceNotFoundException("Notes not found or you do not have permission to copy it"));
+
+	    if (Boolean.TRUE.equals(originalNote.getIsDeleted())) {
+	        throw new ResourceNotFoundException(
+	                "Deleted notes cannot be copied");
+	    }
+
+	    Notes copiedNote = new Notes();
+
+	    copiedNote.setTitle(originalNote.getTitle() + " (Copy)");
+	    copiedNote.setDescription(originalNote.getDescription());
+	    copiedNote.setCategory(originalNote.getCategory());
+	    copiedNote.setIsDeleted(false);
+	    copiedNote.setDeletedOn(null);
+	    copiedNote.setFileDetails(null);
+
+	    Notes savedNote = notesRepository.save(copiedNote);
+
+	    return !ObjectUtils.isEmpty(savedNote);
 	}
 
-	
-	
 }

@@ -4,15 +4,19 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.becoder.dto.TodoDto;
 import com.becoder.dto.TodoDto.StatusDto;
 import com.becoder.entity.Todo;
+import com.becoder.entity.User;
 import com.becoder.enums.TodoStatus;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.repository.TodoRepository;
+import com.becoder.repository.UserRepository;
 import com.becoder.service.TodoService;
 import com.becoder.util.Validation;
 
@@ -27,6 +31,9 @@ public class TodoServiceImpl implements TodoService {
 	
 	@Autowired
 	private Validation validation;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@Override
 	public Boolean SaveTodo(TodoDto todoDto) throws Exception {
@@ -60,13 +67,33 @@ public class TodoServiceImpl implements TodoService {
 		}
 	}
 
-	@Override
-	public List<TodoDto> getTodoByUser() {
-		Integer userId=1;
-		List<Todo> todos = todoRepository.findByCreatedBy(userId);
-		return todos.stream().map(td -> mapper.map(td, TodoDto.class)).toList();
-	}
+//	@Override
+//	public List<TodoDto> getTodoByUser() {
+//		Integer userId=1;
+//		List<Todo> todos = todoRepository.findByCreatedBy(userId);
+//		return todos.stream().map(td -> mapper.map(td, TodoDto.class)).toList();
+//	}
 	
+	@Override
+	public List<TodoDto> getTodoByUser() throws Exception {
 
+	    Authentication authentication =SecurityContextHolder.getContext().getAuthentication();
+
+	    String email = authentication.getName();
+
+	    User user = userRepository.findByEmail(email);
+
+	    if (user == null) {
+	        throw new ResourceNotFoundException("User not found");
+	    }
+
+	    Integer userId = user.getId();
+
+	    List<Todo> todos = todoRepository.findByCreatedBy(userId);
+
+	    return todos.stream()
+	            .map(td -> mapper.map(td, TodoDto.class))
+	            .toList();
+	}
 	
 }

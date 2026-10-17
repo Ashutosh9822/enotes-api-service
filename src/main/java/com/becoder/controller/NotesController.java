@@ -38,6 +38,23 @@ public class NotesController implements NotesEndpoint {
 		}
 		return CommonUtil.createErrorResponseMessage("Notes Not saved", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	@Override
+	public ResponseEntity<?> updateNotes(@PathVariable Integer id,@RequestParam String notes,@RequestParam(required = false) MultipartFile file)
+	        throws Exception {
+	    Boolean updateNotes = notesService.updateNotes(id, notes, file);
+	    if (updateNotes) {
+	        return CommonUtil.createBuildResponseMessage(
+	                "Notes updated successfully",
+	                HttpStatus.OK
+	        );
+	    }
+
+	    return CommonUtil.createErrorResponseMessage(
+	            "Notes Not updated",
+	            HttpStatus.INTERNAL_SERVER_ERROR
+	    );
+	}
 
 	@Override
 	public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception {

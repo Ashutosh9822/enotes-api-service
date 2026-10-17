@@ -2,7 +2,9 @@ package com.becoder.repository;
 
 
 import java.time.LocalDateTime;
+
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,4 +31,5 @@ public interface NotesRepository extends JpaRepository<Notes, Integer> {
 			+"and n.createdBy=:userId")
 	Page<Notes> searchNotes(@Param("keyword") String keyword,@Param("userId") Integer userId,Pageable pageable);
 	
+	Optional<Notes> findByIdAndCreatedBy(Integer id, Integer userId);
 }	

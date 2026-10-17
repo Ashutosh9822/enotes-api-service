@@ -112,10 +112,16 @@ public class AuthServiceImpl implements AuthService {
 		emailService.sendEmail(emailRequest);
 	}
 
+//	private void setRole(UserRequest userDto, User user) {
+//		List<Integer> reqRoleId = userDto.getRoles().stream().map(r -> r.getId()).toList();
+//		List<Role> roles = roleRepository.findAllById(reqRoleId);
+//		user.setRoles(roles);
+//	}
+	
+
 	private void setRole(UserRequest userDto, User user) {
-		List<Integer> reqRoleId = userDto.getRoles().stream().map(r -> r.getId()).toList();
-		List<Role> roles = roleRepository.findAllById(reqRoleId);
-		user.setRoles(roles);
+		Role userRole = roleRepository.findByName("ROLE_USER").orElseThrow(() -> new IllegalStateException("ROLE_USER not found in database"));
+		user.setRoles(List.of(userRole));
 	}
 
 	@Override

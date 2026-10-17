@@ -1,8 +1,10 @@
 package com.becoder.dto;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
+import lombok.Builder;
+
+@Builder
 public class CategoryDto {
 
 	private Integer id;

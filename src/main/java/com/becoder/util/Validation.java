@@ -27,7 +27,7 @@ public class Validation {
 
 	@Autowired
 	private RoleRepository roleRepository;
-	
+
 	@Autowired
 	private UserRepository userRepository;
 
@@ -84,7 +84,47 @@ public class Validation {
 		}
 	}
 
+//	public void userValidation(UserRequest userDto) {
+//		if (!StringUtils.hasText(userDto.getFirstName())) {
+//			throw new IllegalArgumentException("First Name is Invalid");
+//		}
+//
+//		if (!StringUtils.hasText(userDto.getLastName())) {
+//			throw new IllegalArgumentException("Last Name is Invalid");
+//		}
+//
+//		if (!StringUtils.hasText(userDto.getEmail()) || !userDto.getEmail().matches(Constants.EMAIL_REGEX)) {
+//			throw new IllegalArgumentException("Email is Invalid");
+//		}else {
+//			Boolean existsEmail = userRepository.existsByEmail(userDto.getEmail());
+//			if(existsEmail) {
+//				throw new ExistDataException("Email already exist");
+//			}
+//		}
+//
+//		if (!StringUtils.hasText(userDto.getMobNo()) || !userDto.getMobNo().matches(Constants.MOBNO_REGEX)) {
+//			throw new IllegalArgumentException("Mobile no. is Invalid");
+//		}
+//		
+//		if (CollectionUtils.isEmpty(userDto.getRoles())) {
+//			throw new IllegalArgumentException("Role is Invalid");
+//		} else {
+//			List<Integer> roleIds = roleRepository.findAll().stream().map(r -> r.getId()).toList();
+//			List<Integer> invalidReqRoleids = userDto.getRoles().stream().map(r -> r.getId()).filter(roleId -> !roleIds.contains(roleId)).toList();
+//
+//			if (!CollectionUtils.isEmpty(invalidReqRoleids)) {
+//				throw new IllegalArgumentException("Role is Invalid" + invalidReqRoleids);
+//			}
+//		}
+//		
+//	}
+
 	public void userValidation(UserRequest userDto) {
+
+		if (ObjectUtils.isEmpty(userDto)) {
+			throw new IllegalArgumentException("User request should not be null");
+		}
+
 		if (!StringUtils.hasText(userDto.getFirstName())) {
 			throw new IllegalArgumentException("First Name is Invalid");
 		}
@@ -95,9 +135,10 @@ public class Validation {
 
 		if (!StringUtils.hasText(userDto.getEmail()) || !userDto.getEmail().matches(Constants.EMAIL_REGEX)) {
 			throw new IllegalArgumentException("Email is Invalid");
-		}else {
+		} else {
 			Boolean existsEmail = userRepository.existsByEmail(userDto.getEmail());
-			if(existsEmail) {
+
+			if (existsEmail) {
 				throw new ExistDataException("Email already exist");
 			}
 		}
@@ -105,18 +146,9 @@ public class Validation {
 		if (!StringUtils.hasText(userDto.getMobNo()) || !userDto.getMobNo().matches(Constants.MOBNO_REGEX)) {
 			throw new IllegalArgumentException("Mobile no. is Invalid");
 		}
-		
-		if (CollectionUtils.isEmpty(userDto.getRoles())) {
-			throw new IllegalArgumentException("Role is Invalid");
-		} else {
-			List<Integer> roleIds = roleRepository.findAll().stream().map(r -> r.getId()).toList();
-			List<Integer> invalidReqRoleids = userDto.getRoles().stream().map(r -> r.getId()).filter(roleId -> !roleIds.contains(roleId)).toList();
 
-			if (!CollectionUtils.isEmpty(invalidReqRoleids)) {
-				throw new IllegalArgumentException("Role is Invalid" + invalidReqRoleids);
-			}
-		}
-		
+		// Do not validate userDto.getRoles() here.
+		// AuthServiceImpl assigns ROLE_USER during registration.
 	}
 
 }

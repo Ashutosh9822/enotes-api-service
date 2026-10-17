@@ -17,6 +17,8 @@ import com.becoder.entity.User;
 import com.becoder.service.UserService;
 import com.becoder.util.CommonUtil;
 
+import jakarta.validation.Valid;
+
 @RestController
 public class UserController implements UserEndpoint {
 
@@ -34,7 +36,7 @@ public class UserController implements UserEndpoint {
 	}
 	
 	@Override
-	public ResponseEntity<?> changePassword(@RequestBody PasswordChngRequest passwordChngRequest){
+	public ResponseEntity<?> changePassword(@Valid @RequestBody PasswordChngRequest passwordChngRequest){
 		userService.changePassword(passwordChngRequest);
 		return CommonUtil.createBuildResponseMessage("Password changed successfully", HttpStatus.OK);
 	}

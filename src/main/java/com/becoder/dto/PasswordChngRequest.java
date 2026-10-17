@@ -1,9 +1,15 @@
 package com.becoder.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class PasswordChngRequest {
 
+	@NotBlank(message = "Old password is required")
 	private String oldPassword;
 	
+	@NotBlank(message = "New password is required")
+	@Size(min = 4, message = "New password must contain at least 4 characters")
 	private String newPassword;
 
 	public String getOldPassword() {

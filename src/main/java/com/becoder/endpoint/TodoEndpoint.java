@@ -31,6 +31,6 @@ public interface TodoEndpoint {
 	@Operation(summary = "Get All Todo By User",description = "get all todo by user")
 	@GetMapping("/list")
 	@PreAuthorize(ROLE_USER)
-	public ResponseEntity<?> getAllTodoByUser();
+	public ResponseEntity<?> getAllTodoByUser() throws Exception;
 	
 }

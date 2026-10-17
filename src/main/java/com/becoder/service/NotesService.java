@@ -41,5 +41,7 @@ public interface NotesService {
 	public List<FavouriteNoteDto> getUserFavouritrNotes();
 
 	public Boolean copyNotes(Integer id) throws Exception;
-	
+
+	public Boolean updateNotes(Integer id, String notes, MultipartFile file) throws Exception ;
+
 }

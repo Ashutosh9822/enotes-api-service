@@ -42,7 +42,7 @@ public class TodoController implements TodoEndpoint {
 	}
 	
 	@Override
-	public ResponseEntity<?> getAllTodoByUser(){
+	public ResponseEntity<?> getAllTodoByUser() throws Exception{
 		List<TodoDto> todoList = todoService.getTodoByUser();
 		if(CollectionUtils.isEmpty(todoList)) {
 			return ResponseEntity.noContent().build();

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +33,13 @@ public interface NotesEndpoint {
 	@PostMapping(value ="/save-notes",consumes = "multipart/form-data")
 	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> saveNotes(@RequestParam 
+			@Parameter(description = "JSON string notes",required = true,
+			content = @Content(schema=@Schema(implementation = NotesRequest.class))) String notes, @RequestParam(required = false) MultipartFile file) throws Exception ;
+	
+	@Operation(summary = "Update Notes",tags = {"Notes","User"},description = "Update an existing note")
+	@PutMapping(value ="/update/{id}",consumes = "multipart/form-data")
+	@PreAuthorize(ROLE_USER)
+	public ResponseEntity<?> updateNotes(@PathVariable Integer id,@RequestParam 
 			@Parameter(description = "JSON string notes",required = true,
 			content = @Content(schema=@Schema(implementation = NotesRequest.class))) String notes, @RequestParam(required = false) MultipartFile file) throws Exception ;
 	
